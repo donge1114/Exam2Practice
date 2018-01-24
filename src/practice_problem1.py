@@ -39,15 +39,15 @@ def main():
     # UN-comment tests as you work the problems.
     ####################################################################
 
-    #run_test_init()
-   # run_test_append_string()
-   # run_test_double()
-    run_test_shrink()
-    run_test_double_then_shrink()
-    run_test_reset()
-    run_test_steal()
-    run_test_get_history()
-    run_test_combined_box()
+    # run_test_init()
+    # run_test_append_string()
+    # run_test_double()
+    # run_test_shrink()
+    # run_test_double_then_shrink()
+    # run_test_reset()
+    # run_test_steal()
+    #run_test_get_history()
+    # run_test_combined_box()
 
 
 ########################################################################
@@ -103,12 +103,14 @@ class Box(object):
         #    TIME ESTIMATE:   5 minutes.
         # --------------------------------------------------------------
         self.contents = contents
-        if len(contents) > volume:
+        if len(self.contents) > volume:
             self.contents = ''
-        self.o_contents = contents
+        self.o_contents = self.contents
         self.volume = volume
         self.o_volume = volume
-
+        self.character = 0
+        self.stuff_to_return = ''
+        self.history = []
 
     def append_string(self, additional_contents):
         """
@@ -192,7 +194,10 @@ class Box(object):
             stuff_to_return = stuff_to_return + additional_contents[k]
 
         # Return the result from the previous loop:
-
+        self.character = len(stuff_to_return)
+        # if self.character ==0:
+        #     stuff_to_return =''
+        self.stuff_to_return = stuff_to_return
         return stuff_to_return
 
 
@@ -292,14 +297,16 @@ class Box(object):
         # and THEN translate the pseudo-code to a solution.
         # --------------------------------------------------------------
         self.volume = new_volume
-        if new_volume > self.o_volume or new_volume > len(self.contents):
+        if new_volume >= self.o_volume or new_volume>=len(self.contents):
             return ''
+
         add_string = ''
-        for k in range (new_volume, len(self.contents)):
-            add_string = add_string + self.contents[k]
+        for k in range(new_volume,len(self.contents)):
+            add_string += self.contents[k]
+
         string = ''
-        for k in range (new_volume):
-            string = string + self.contents[k]
+        for k in range(new_volume):
+            string += self.contents[k]
         self.contents = string
         return add_string
 
@@ -356,7 +363,7 @@ class Box(object):
         #    TIME ESTIMATE:   5 minutes.
         # --------------------------------------------------------------
         self.double()
-        return len(self.shrink(new_volume)) + self.character
+        return len(self.shrink(new_volume))+self.character
 
     def reset(self):
         """
@@ -481,9 +488,8 @@ class Box(object):
         # --------------------------------------------------------------
         new_contents = self.contents + other_box.contents
         new_volume = self.volume + other_box.volume
-        new_box = Box(new_contents, new_volume)
+        new_box = Box(new_contents,new_volume)
         return new_box
-
 
 ########################################################################
 # The TEST functions for the  Box  class begin here.
